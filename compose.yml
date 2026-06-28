@@ -1,6 +1,6 @@
 services:
-  # Qwen3-TTS voice cloning. Runs each generation in a one-shot subprocess (worker.py)
-  # so it holds zero VRAM when idle — important when sharing a GPU.
+  # Qwen3-TTS voice cloning. The model is loaded once and kept resident in VRAM (~4 GB) for
+  # fast, reload-free generation; a warmup pass at startup compiles the CUDA kernels.
   tts:
     build:
       context: ./tts
@@ -16,6 +16,7 @@ services:
     environment:
       PYTORCH_CUDA_ALLOC_CONF: expandable_segments:True
       TTS_MODEL: Qwen/Qwen3-TTS-12Hz-1.7B-Base
+      TTS_ATTN: eager  # eager|sdpa — attention kernel (Pascal has no FlashAttention-2)
 
   # Whisper speech-to-text for /register. CPU-only on purpose: keeps STT off the GPU
   # so it never competes with the TTS model for VRAM.
