@@ -1,0 +1,35 @@
+{
+  "name": "mimic-tts",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Mimic-TTS — a Discord bot that speaks registered users' typed messages live in their own cloned voice (Qwen3-TTS + Whisper).",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "start": "tsx src/index.ts",
+    "deploy": "tsx src/deploy-commands.ts",
+    "clear": "tsx src/clear-commands.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@discordjs/voice": "^0.19.2",
+    "@snazzah/davey": "^0.1.12",
+    "better-sqlite3": "^12.4.1",
+    "discord.js": "^14.26.4",
+    "dotenv": "^17.4.2",
+    "ffmpeg-static": "^5.2.0",
+    "libsodium-wrappers": "^0.8.4",
+    "opusscript": "^0.0.8",
+    "prism-media": "^1.3.5",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.11",
+    "@types/node": "^24.0.0",
+    "tsx": "^4.19.2",
+    "typescript": "^6.0.3"
+  }
+}

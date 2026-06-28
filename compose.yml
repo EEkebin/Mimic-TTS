@@ -1,0 +1,37 @@
+services:
+  # Qwen3-TTS voice cloning. Runs each generation in a one-shot subprocess (worker.py)
+  # so it holds zero VRAM when idle — important when sharing a GPU.
+  tts:
+    build:
+      context: ./tts
+    restart: unless-stopped
+    ports:
+      - "8011:8001"
+    volumes:
+      - hf_cache:/root/.cache/huggingface
+    devices:
+      - "nvidia.com/gpu=all"
+    security_opt:
+      - "label=disable"
+    environment:
+      PYTORCH_CUDA_ALLOC_CONF: expandable_segments:True
+      TTS_MODEL: Qwen/Qwen3-TTS-12Hz-1.7B-Base
+
+  # Whisper speech-to-text for /register. CPU-only on purpose: keeps STT off the GPU
+  # so it never competes with the TTS model for VRAM.
+  stt:
+    build:
+      context: ./stt
+    restart: unless-stopped
+    ports:
+      - "8012:8012"
+    volumes:
+      - whisper_cache:/root/.cache/huggingface
+    environment:
+      WHISPER_MODEL: base
+      WHISPER_DEVICE: cpu
+      WHISPER_COMPUTE_TYPE: int8
+
+volumes:
+  hf_cache:
+  whisper_cache:
